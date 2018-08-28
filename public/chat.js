@@ -9,8 +9,59 @@ var message = document.getElementById('message'),
       output = document.getElementById('output');
       feedback = document.getElementById('feedback');
 
+//speech recognization
+
+ 
+
+
+
+
+  window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 2;
+  recognition.lang = 'en-US';
+  
+  let p = document.createElement('p');
+  const words = document.querySelector('.words');
+  words.appendChild(p);
+  
+
+
+
+
+
+
+
+
+  recognition.addEventListener('result', e => {
+    const transcript = Array.from(e.results)
+      .map(result => result[0])
+      .map(result => result.transcript)
+      .join('');
+     
+    
+      if (e.results[0].isFinal) {
+       
+
+   socket.emit('chat', {
+
+      message:transcript,
+      handle: handle.value
+  });
+
+
+ }
+
+
+
+  });
+  recognition.addEventListener('end', recognition.start);
+  recognition.start();
 
 // Emit events
+
+
 btn.addEventListener('click', function(){
   socket.emit('chat', {
       message: message.value,
